@@ -18,7 +18,8 @@ shorten = ''
 if button and (prev_origin != origin):
     r = requests.post(f'{BACKEND_URL}/api/generate', json={'origin': st.session_state.get('origin')})
     if r.status_code == 200 or r.status_code == 201:
-        st.success(f'ururl is: {r.text}')
+        left, _ = st.columns(2)
+        left.success(f'ururl is: {r.text}')
         st.balloons()
     elif r.status_code / 100 in (4, 5):
         st.error(f'{r.status_code} Error: {r.text}')

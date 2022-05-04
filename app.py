@@ -17,6 +17,6 @@ if button or (prev_origin != origin):
     r = requests.post(f'{BACKEND_URL}/api/generate', json={'origin': st.session_state.get('origin')})
     shorten = f'http://{r.text}'
     st.write(f'[{shorten}]({shorten})')
-    st.write(r.status_code)
+    st.balloons()
 
     prev_origin = origin

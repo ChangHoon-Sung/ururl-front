@@ -13,9 +13,9 @@ button = st.button('Shorten!')
 shorten = ''
 
 # You can access the value at any point with:
-if button or (prev_origin != origin):
+if button and (prev_origin != origin):
     r = requests.post(f'{BACKEND_URL}/api/generate', json={'origin': st.session_state.get('origin')})
-    shorten = f'http://{r.text}'
+    shorten = f'{r.text}'
     st.write(f'[{shorten}]({shorten})')
     st.balloons()
 

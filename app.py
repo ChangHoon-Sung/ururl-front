@@ -17,8 +17,10 @@ shorten = ''
 # You can access the value at any point with:
 if button and (prev_origin != origin):
     r = requests.post(f'{BACKEND_URL}/api/generate', json={'origin': st.session_state.get('origin')})
-    shorten = f'{r.text}'
-    st.write(f'[{shorten}]({shorten})')
-    st.balloons()
+    if r.status_code == 200 or r.status_code == 201:
+        st.success(f'ururl is: {r.text}')
+        st.balloons()
+    elif r.status_code / 100 in (4, 5):
+        st.error(f'{r.status_code} Error: {r.text}')
 
     prev_origin = origin

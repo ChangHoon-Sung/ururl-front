@@ -4,6 +4,8 @@ import requests
 
 BACKEND_URL = os.getenv('BACKEND_URL')
 
+st.set_page_config(page_title='URURL')
+
 st.title("URURL.LIFE")
 st.write('Make your url short and easy to remember!')
 

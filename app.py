@@ -7,7 +7,7 @@ BACKEND_URL = os.getenv('BACKEND_URL')
 st.set_page_config(page_title='URURL')
 
 st.title("URURL.LIFE")
-st.write('Make your url short and easy to remember!')
+st.write('Make your url short and easy to share!')
 
 prev_origin = ''
 origin = st.text_input('your url', key='origin')

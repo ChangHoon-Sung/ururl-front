@@ -2,26 +2,95 @@ import os
 import streamlit as st
 import requests
 
-BACKEND_URL = os.getenv('BACKEND_URL')
+# init page settings
+BACKEND_URL = os.getenv("BACKEND_URL")
 
-st.set_page_config(page_title='URURL')
+st.set_page_config(page_title="URURL")
 
 st.title("URURL.LIFE")
-st.write('Make your url short and easy to share!')
+st.write("Make your url short and easy to share!")
 
-prev_origin = ''
-origin = st.text_input('your url', key='origin')
-button = st.button('Shorten!')
-shorten = ''
+# init session states
+if 'request_session' not in st.session_state.keys():
+    st.session_state['request_session'] = requests.Session()
 
-# You can access the value at any point with:
-if button and (prev_origin != origin):
-    r = requests.post(f'{BACKEND_URL}/api/generate', json={'origin': st.session_state.get('origin')})
+if "user" not in st.session_state.keys():
+    st.session_state["user"] = None
+
+
+# random url generator layout
+with st.form("random_form"):
+    st.text_input("your url", key="random_origin")
+    random_sumitted = st.form_submit_button("Shorten!")
+
+# generate random url
+if random_sumitted:
+    r = requests.post(
+        f"{BACKEND_URL}/api/generate",
+        json={"origin": st.session_state.get("random_origin")},
+    )
     if r.status_code == 200 or r.status_code == 201:
         left, _ = st.columns(2)
-        left.success(f'ururl is: {r.text}')
+        left.success(f"ururl is: {r.text}")
         st.balloons()
     elif r.status_code / 100 in (4, 5):
-        st.error(f'{r.status_code} Error: {r.text}')
+        st.error(f"{r.status_code} Error: {r.text}")
 
-    prev_origin = origin
+
+# make extra space
+for _ in range(2):
+    st.text("\n ")
+
+
+# if logged in, show custom url generator
+if st.session_state['user']:
+    st.header("Customize!")
+    st.write(f"You can make your own url likes, {BACKEND_URL.split('//')[-1]}/<custom id>")
+
+    with st.form("custom_form"):
+        st.text_input("your url", key="custom_origin")
+        st.text_input(
+            "custom id",
+            placeholder = "" if st.session_state['user'] else "signin required",
+            key="custom_id",
+            disabled=not st.session_state['user'],
+        )
+        custom_sumitted = st.form_submit_button("Shorten!")
+
+    if custom_sumitted:
+        if not st.session_state["custom_id"]:
+            st.error("signin required")
+        else:
+            r = st.session_state['request_session'].post(
+                f"{BACKEND_URL}/api/custom/generate",
+                json={"origin": st.session_state["custom_origin"], "id": st.session_state["custom_id"]},
+            )
+            if r.status_code == 200 or r.status_code == 201:
+                left, _ = st.columns(2)
+                left.success(f"ururl is: {r.text}")
+                st.balloons()
+            elif r.status_code / 100 in (4, 5):
+                st.error(f"{r.status_code} Error: {r.text}")
+
+# signin layout
+else:
+    st.header("Sign in")
+    with st.form("signin_form"):
+        st.text_input("username", key="signin_username")
+        st.text_input("password", key="signin_password", type="password")
+        signin_sumitted = st.form_submit_button("Sign in")
+
+    if signin_sumitted:
+        r: requests.Response = st.session_state['request_session'].post(
+            f"{BACKEND_URL}/api/account/signin",
+            json={
+                "username": st.session_state["signin_username"],
+                "password": st.session_state["signin_password"],
+            },
+        )
+        if r.status_code == 200:
+            st.session_state["request_session"].headers.update({"X-CSRFToken": r.cookies["csrftoken"]})
+            st.session_state["user"] = st.session_state['request_session'].cookies.get_dict()
+        elif r.status_code / 100 in (4, 5):
+            st.error(f"{r.status_code} Error: {r.text}")
+        st.experimental_rerun()

@@ -45,7 +45,7 @@ for _ in range(2):
 # if logged in, show custom url generator
 if st.session_state['user']:
     st.header("Customize!")
-    st.write(f"You can make your own url likes, {BACKEND_URL.split('//')[-1]}/<custom id>")
+    st.write("You can make your own url! -> ururl.life/<custom id>")
 
     with st.form("custom_form"):
         st.text_input("your url", key="custom_origin")

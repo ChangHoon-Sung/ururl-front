@@ -12,23 +12,23 @@ _ = st.empty()
 with _.container():
     st.write("Almost done!")
     with st.form("signup_form"):
-        st.text_input("username", key="signin_username")
-        st.text_input("password", key="signin_password", type="password")
-        st.text_input("password check", key="signin_password2", type="password")
+        st.text_input("username", key="signup_username")
+        st.text_input("password", key="signup_password", type="password")
+        st.text_input("password check", key="signup_password2", type="password")
         
-        signin_sumitted = st.form_submit_button("Sign in")
+        signup_sumitted = st.form_submit_button("Sign in")
 
-        if signin_sumitted:
-            if not st.session_state["signin_username"]:
+        if signup_sumitted:
+            if not st.session_state["signup_username"]:
                 st.error("username required")
-            elif st.session_state["signin_password"] != st.session_state["signin_password2"]:
+            elif st.session_state["signup_password"] != st.session_state["signup_password2"]:
                 st.error("password doesn't match")
             else:
                 r: requests.Response = requests.post(
                     f"{BACKEND_URL}/api/account/signup",
                     json={
-                        "username": st.session_state["signin_username"],
-                        "password": st.session_state["signin_password"],
+                        "username": st.session_state["signup_username"],
+                        "password": st.session_state["signup_password"],
                     },
                 )
                 if r.status_code == 200:

@@ -10,6 +10,7 @@ is_finished = False
 st.title("👤 Sign Up")
 _ = st.empty()
 with _.container():
+    st.markdown("""Already have an account? <a href="/" target=_self>Home</a>""", unsafe_allow_html=True)
     st.write("Almost done!")
     with st.form("signup_form"):
         st.text_input("username", key="signup_username")
@@ -39,3 +40,4 @@ with _.container():
 if is_finished:
     _.empty()
     st.success(f"Sign up success! 🎉")
+    st.markdown(f"""Let's go to <a href="/" target="_self"> 🏡 Home</a>""", unsafe_allow_html=True)

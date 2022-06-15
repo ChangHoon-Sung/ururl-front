@@ -75,6 +75,7 @@ if st.session_state['user']:
 # signin layout
 else:
     st.header("Sign in")
+    st.markdown("""Don't have an account? <a href="/Sign_Up" target=_self>Sign up</a>""", unsafe_allow_html=True)
     with st.form("signin_form"):
         st.text_input("username", key="signin_username")
         st.text_input("password", key="signin_password", type="password")

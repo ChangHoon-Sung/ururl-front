@@ -2,12 +2,15 @@ import os
 import streamlit as st
 import requests
 
+print(f"requested node: {os.getenv('MY_NODE_NAME')}")
+
 # init page settings
-BACKEND_URL = os.getenv("BACKEND_URL")
+BACKEND_URL = f"http://{os.getenv('BACK_SERVICE_HOST')}:{os.getenv('BACK_SERVICE_PORT')}"
 
 st.set_page_config(page_title="URURL")
 
 st.title("URURL.LIFE")
+st.write(f"node: {os.getenv('MY_NODE_NAME')}")
 st.write("Make your url short and easy to share!")
 
 # init session states
@@ -45,7 +48,7 @@ for _ in range(2):
 # if logged in, show custom url generator
 if st.session_state['user']:
     st.header("Customize!")
-    st.write("You can make your own url! -> ururl.life/<custom id>")
+    st.write("You can make your own url!")
 
     with st.form("custom_form"):
         st.text_input("your url", key="custom_origin")
@@ -75,6 +78,7 @@ if st.session_state['user']:
 # signin layout
 else:
     st.header("Sign in")
+    st.markdown("""Don't have an account? <a href="/Sign_Up" target=_self>Sign up</a>""", unsafe_allow_html=True)
     with st.form("signin_form"):
         st.text_input("username", key="signin_username")
         st.text_input("password", key="signin_password", type="password")

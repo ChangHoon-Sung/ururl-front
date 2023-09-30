@@ -4,7 +4,7 @@ import streamlit as st
 
 st.set_page_config(page_title="Sign Up")
 
-BACKEND_URL = os.getenv("BACKEND_URL")
+BACKEND_URL = f"http://{os.getenv('BACK_SERVICE_HOST')}:{os.getenv('BACK_SERVICE_PORT')}"
 is_finished = False
 
 st.title("👤 Sign Up")
